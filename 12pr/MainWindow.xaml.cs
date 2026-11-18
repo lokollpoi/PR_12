@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using Microsoft.Win32;
 
 namespace _12pr
 {
@@ -129,6 +131,62 @@ namespace _12pr
                 );
 
             CreateUI(FindBook);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveBtn(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if(sfd.ShowDialog() == true)
+            {
+                using (StreamWriter sw = new StreamWriter(sfd.FileName))
+                {
+                    foreach (Classes.Book Book in AllBooks)
+                    {
+                        sw.WriteLine($"{Book.Id};{Book.Name};{Book.ToGenres()};{Book.ToAuthors()};{Book.Year}");
+                    }
+                }
+            }
+        }
+
+        private void ImportBtn(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == true)
+            {
+                using (StreamReader sr = new StreamReader(ofd.FileName))
+                {  
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(';');
+                        int id = int.Parse(parts[0]);
+                        string name = parts[1];
+                        List<Classes.Genre> genres = new List<Classes.Genre>();
+                        foreach (string genreName in parts[2].Split(','))
+                        {
+                            Classes.Genre genre = AllGenres.Find(x => x.Name == genreName.Trim());
+                            if (genre != null)
+                                genres.Add(genre);
+                        }
+                        List<Classes.Author> authors = new List<Classes.Author>();
+                        foreach (string authorName in parts[3].Split(','))
+                        {
+                            Classes.Author author = AllAuthors.Find(x => x.FIO == authorName.Trim());
+                            if (author != null)
+                                authors.Add(author);
+                        }
+                        int year = int.Parse(parts[4]);
+                        AllBooks.Add(new Classes.Book(id, name, genres, authors, year));
+                    }
+                }
+                CreateUI(AllBooks);
+            }
+
         }
     }
 }
