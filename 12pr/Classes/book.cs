@@ -8,22 +8,17 @@ namespace _12pr.Classes
 {
     public class Book
     {
-        /// <summary> Код книги
+
         public int Id { get; set; }
 
-        /// <summary> Наименование
         public string Name { get; set; }
 
-        /// <summary> Жанры
         public List<Genre> Genres { get; set; }
 
-        /// <summary> Авторы
         public List<Author> Authors { get; set; }
 
-        /// <summary> Год издания
         public int Year { get; set; }
 
-        /// <summary> Конструктор
         public Book(int Id, string Name, List<Genre> Genres, List<Author> Authors, int Year)
         {
             this.Id = Id;
@@ -33,12 +28,10 @@ namespace _12pr.Classes
             this.Year = Year;
         }
 
-        /// <summary> Репозиторий книг
         public static List<Book> AllBook()
         {
-            // Создаём список
+
             List<Book> allBook = new List<Book>();
-            // Добавляем в список книги
             allBook.Add(new Book(
                 1, "Путешествие в Элевсин",
                 Genre.AllGenres().FindAll(x => x.Id == 1),
@@ -60,11 +53,9 @@ namespace _12pr.Classes
                 Genre.AllGenres().FindAll(x => x.Id == 2 || x.Id == 3 || x.Id == 4),
                 Author.AllAuthors().FindAll(x => x.Id == 3), 2022));
 
-            // Возвращаем список
             return allBook;
         }
 
-        /// <summary> Список жанров через запятую
         public string ToGenres()
         {
 
